@@ -6,19 +6,20 @@ import android.os.Parcelable;
 import java.util.Date;
 
 public class Note implements Parcelable {
-    private int Index;
+    private int index;
     private String name;
     private String description;
     private Date dateOfCreation;
 
-    public Note(String name, String description) {
+    public Note(int index, String name, String description) {
+        this.index = index;
         this.name = name;
         this.description = description;
         this.dateOfCreation = new Date();
     }
 
     protected Note(Parcel in) {
-        Index = in.readInt();
+        index = in.readInt();
         name = in.readString();
         description = in.readString();
     }
@@ -36,7 +37,7 @@ public class Note implements Parcelable {
     };
 
     public int getIndex() {
-        return Index;
+        return index;
     }
 
     public String getName() {
@@ -50,7 +51,7 @@ public class Note implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(Index);
+        dest.writeInt(index);
         dest.writeString(name);
         dest.writeString(description);
     }

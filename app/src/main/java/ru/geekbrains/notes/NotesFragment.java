@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class NotesFragment extends Fragment {
 
     public static final String CURRENT_NOTE = "CurrentNote";
-    private int currentNoteIndex = 0;
+    private Note currentNote;
     private boolean isLandscape;
 
     @Override
@@ -39,7 +39,7 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(CURRENT_NOTE, currentNoteIndex);
+        outState.putParcelable(CURRENT_NOTE, currentNote);
         super.onSaveInstanceState(outState);
     }
 
@@ -51,10 +51,12 @@ public class NotesFragment extends Fragment {
                 Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentNoteIndex = savedInstanceState.getInt(CURRENT_NOTE, 0);
+            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+        } else {
+            currentNote = new Note(0, getResources().getStringArray(R.array.notes)[0], "");
         }
 
-        showNote(0);
+        showNote(currentNote);
     }
 
     private void initializeNotes(View view) {
@@ -70,36 +72,33 @@ public class NotesFragment extends Fragment {
 
             notesList.addView(noteItem);
 
-            final int noteIndex = index;
-
             noteItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentNoteIndex = noteIndex;
-                    showNote(noteIndex);
+                    showNote(currentNote);
                 }
             });
 
         }
     }
 
-    private void showNote(int noteIndex) {
+    private void showNote(Note currentNote) {
         if (isLandscape) {
-            showNoteNearby(noteIndex);
+            showNoteNearby(currentNote);
         } else {
-            showNoteSeparately(noteIndex);
+            showNoteSeparately(currentNote);
         }
     }
 
-    private void showNoteSeparately(int noteIndex) {
+    private void showNoteSeparately(Note currentNote) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), NoteActivity.class);
-        intent.putExtra(NoteFragment.INDEX, noteIndex);
+        intent.putExtra(NoteFragment.NOTE_KEY, currentNote);
         startActivity(intent);
     }
 
-    private void showNoteNearby(int noteIndex) {
-        NoteFragment note = NoteFragment.newInstance(noteIndex);
+    private void showNoteNearby(Note currentNote) {
+        NoteFragment note = NoteFragment.newInstance(currentNote);
 
         FragmentManager manager = requireActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
