@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class NoteFragment extends Fragment {
 
@@ -33,6 +36,14 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_note, container, false);
+        View view = inflater.inflate(R.layout.fragment_note, container, false);
+
+        TextView nameView = view.findViewById(R.id.name);
+        nameView.setText(currentNote.getName());
+
+        EditText descriptionView = view.findViewById(R.id.description);
+        descriptionView.setText(currentNote.getDescription());
+
+        return view;
     }
 }
