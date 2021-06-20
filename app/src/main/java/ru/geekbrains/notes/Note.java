@@ -44,6 +44,14 @@ public class Note implements Parcelable {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public Date getDateOfCreation() {
+        return dateOfCreation;
+    }
+
     @Override
     public int describeContents() {
         return 0;

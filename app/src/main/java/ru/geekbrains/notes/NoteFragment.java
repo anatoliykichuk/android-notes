@@ -8,20 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NoteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NoteFragment extends Fragment {
 
-    public static final String NOTE_KEY = "Note";
+    public static final String CURRENT_NOTE = "CurrentNote";
     private static Note currentNote;
 
     public static NoteFragment newInstance(Note currentNote) {
         NoteFragment fragment = new NoteFragment();
         Bundle args = new Bundle();
-        args.putParcelable(NOTE_KEY, currentNote);
+        args.putParcelable(CURRENT_NOTE, currentNote);
         fragment.setArguments(args);
         return fragment;
     }
@@ -30,7 +25,7 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            currentNote = getArguments().getParcelable(NOTE_KEY);
+            currentNote = getArguments().getParcelable(CURRENT_NOTE);
         }
     }
 

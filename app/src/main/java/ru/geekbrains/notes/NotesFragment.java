@@ -93,7 +93,7 @@ public class NotesFragment extends Fragment {
     private void showNoteSeparately(Note currentNote) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), NoteActivity.class);
-        intent.putExtra(NoteFragment.NOTE_KEY, currentNote);
+        intent.putExtra(NoteFragment.CURRENT_NOTE, currentNote);
         startActivity(intent);
     }
 
