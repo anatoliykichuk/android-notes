@@ -4,13 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".NoteActivity">
 
-    <fragment
-        android:id="@+id/notes"
-        android:name="ru.geekbrains.notes.NotesFragment"
+    <FrameLayout
+        android:id="@+id/note_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

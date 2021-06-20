@@ -9,7 +9,13 @@
     <fragment
         android:id="@+id/notes"
         android:name="ru.geekbrains.notes.NotesFragment"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/width_auto"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <FrameLayout
+        android:id="@+id/note"
+        android:layout_width="@dimen/width_auto"
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
