@@ -56,7 +56,9 @@ public class NotesFragment extends Fragment {
             currentNote = new Note(0, getResources().getStringArray(R.array.notes)[0], "");
         }
 
-        showNote(currentNote);
+        if (isLandscape) {
+            showNoteNearby(currentNote);
+        }
     }
 
     private void initializeNotes(View view) {
@@ -72,9 +74,12 @@ public class NotesFragment extends Fragment {
 
             notesList.addView(noteItem);
 
+            final int noteIndex = index;
+
             noteItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    currentNote = new Note(noteIndex, notes[noteIndex], "");
                     showNote(currentNote);
                 }
             });
