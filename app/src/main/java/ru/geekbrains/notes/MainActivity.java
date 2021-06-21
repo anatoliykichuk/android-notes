@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -37,17 +38,26 @@ public class MainActivity extends AppCompatActivity {
         switch (itemId) {
             case R.id.menu_add:
                 // TODO: Реализовать добавление заметки.
+                showMessage("Добавление заметки");
                 return true;
             case R.id.menu_edit:
                 // TODO: Реализовать открытие текущей заметки для редактирования.
+                showMessage("Редактирование заметки");
                 return true;
             case R.id.menu_remove:
                 // TODO: Реализовать удаление текущей заметки.
+                showMessage("Удаление заметки");
                 return true;
             case R.id.menu_about:
                 // TODO: Реализовать вывод информации о приложении.
+                showMessage("Отображение информации о приложении");
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showMessage(String message) {
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
