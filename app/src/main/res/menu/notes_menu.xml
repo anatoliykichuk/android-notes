@@ -5,17 +5,21 @@
         android:id="@+id/menu_add"
         android:title="@string/menu_add"
         android:icon="@drawable/add"
+        android:orderInCategory="10"
         app:showAsAction="always"/>
     <item
         android:id="@+id/menu_edit"
         android:title="@string/menu_edit"
-        android:icon="@drawable/edit"/>
+        android:icon="@drawable/edit"
+        android:orderInCategory="20"/>
     <item
         android:id="@+id/menu_remove"
         android:title="@string/menu_remove"
-        android:icon="@drawable/remove"/>
+        android:icon="@drawable/remove"
+        android:orderInCategory="30"/>
     <item
         android:id="@+id/menu_about"
         android:title="@string/menu_about"
-        android:icon="@drawable/about"/>
+        android:icon="@drawable/about"
+        android:orderInCategory="40"/>
 </menu>

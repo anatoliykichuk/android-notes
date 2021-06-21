@@ -83,7 +83,6 @@ public class NotesFragment extends Fragment {
                     showNote(currentNote);
                 }
             });
-
         }
     }
 
