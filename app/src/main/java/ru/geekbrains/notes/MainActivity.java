@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeToolBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.notes_toolbar);
         setSupportActionBar(toolbar);
     }
 
