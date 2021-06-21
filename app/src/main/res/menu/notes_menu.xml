@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_add"
+        android:title="@string/menu_add"
+        android:icon="@drawable/add"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_edit"
+        android:title="@string/menu_edit"
+        android:icon="@drawable/edit"/>
+    <item
+        android:id="@+id/menu_remove"
+        android:title="@string/menu_remove"
+        android:icon="@drawable/remove"/>
+    <item
+        android:id="@+id/menu_about"
+        android:title="@string/menu_about"
+        android:icon="@drawable/about"/>
+</menu>
