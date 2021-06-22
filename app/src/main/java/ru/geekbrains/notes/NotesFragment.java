@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NotesFragment extends Fragment {
 
@@ -32,9 +33,7 @@ public class NotesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
-
         setHasOptionsMenu(true);
-        initializePopupMenu(view);
 
         return view;
     }
@@ -92,17 +91,24 @@ public class NotesFragment extends Fragment {
                     showNote(currentNote);
 
                     Activity context = requireActivity();
-
                     PopupMenu popupMenu = new PopupMenu(context, v);
                     context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
-
-                    Menu menu = popupMenu.getMenu();
-                    // TODO: использую getResources() получить пункты меню и в цикле подключить обработчики.
-
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            return false;
+                            int itemId = item.getItemId();
+
+                            switch (itemId) {
+                                case R.id.menu_to_begin:
+                                    // TODO: Реализовать активизацию первой строки.
+                                    showMessage("Переход в начало");
+                                    return true;
+                                case R.id.menu_to_end:
+                                    // TODO: Реализовать активизацию последней строки.
+                                    showMessage("Переход в конец");
+                                    return true;
+                            }
+                            return true;
                         }
                     });
                     popupMenu.show();
@@ -136,27 +142,8 @@ public class NotesFragment extends Fragment {
         transaction.commit();
     }
 
-    private void initializePopupMenu(View view) {
-//        TextView noteItem = new TextView(getContext());
-//        noteItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Activity context = requireActivity();
-//
-//                PopupMenu popupMenu = new PopupMenu(context, v);
-//                context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
-//
-//                Menu menu = popupMenu.getMenu();
-//                // TODO: использую getResources() получить пункты меню и в цикле подключить обработчики.
-//
-//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        return false;
-//                    }
-//                });
-//                popupMenu.show();
-//            }
-//        });
+    private void showMessage(String message) {
+        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
