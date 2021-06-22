@@ -17,8 +17,6 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        //initializeToolBar();
-
         if (getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE) {
             finish();
@@ -36,7 +34,7 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void initializeToolBar() {
-        Toolbar toolbar = findViewById(R.id.notes_toolbar);
+        Toolbar toolbar = findViewById(R.id.note_toolbar);
         setSupportActionBar(toolbar);
     }
 
@@ -51,7 +49,7 @@ public class NoteActivity extends AppCompatActivity {
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.menu_add_fill:
+            case R.id.menu_change_palette:
                 // TODO: Реализовать выбор и установку цвет азаливки.
                 showMessage("Изменение заливки");
                 return true;
