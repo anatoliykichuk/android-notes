@@ -17,7 +17,7 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        initializeToolBar();
+        //initializeToolBar();
 
         if (getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE) {
@@ -31,6 +31,8 @@ public class NoteActivity extends AppCompatActivity {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.note_container, note).commit();
         }
+
+        initializeToolBar();
     }
 
     private void initializeToolBar() {
@@ -40,7 +42,7 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.notes_menu, menu);
+        getMenuInflater().inflate(R.menu.note_menu, menu);
         return true;
     }
 
@@ -49,13 +51,9 @@ public class NoteActivity extends AppCompatActivity {
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.menu_to_begin:
-                // TODO: Реализовать переход к началу описания заметки.
-                showMessage("Добавление заметки");
-                return true;
-            case R.id.menu_to_end:
-                // TODO: Реализовать открытие текущей заметки для редактирования.
-                showMessage("Редактирование заметки");
+            case R.id.menu_add_fill:
+                // TODO: Реализовать выбор и установку цвет азаливки.
+                showMessage("Изменение заливки");
                 return true;
         }
         return super.onOptionsItemSelected(item);
