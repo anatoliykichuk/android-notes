@@ -1,5 +1,6 @@
 package ru.geekbrains.notes;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,10 +13,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NotesFragment extends Fragment {
 
@@ -27,7 +31,10 @@ public class NotesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notes, container, false);
+        View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        setHasOptionsMenu(true);
+
+        return view;
     }
 
     @Override
@@ -81,9 +88,31 @@ public class NotesFragment extends Fragment {
                 public void onClick(View v) {
                     currentNote = new Note(noteIndex, notes[noteIndex], "");
                     showNote(currentNote);
+
+                    Activity context = requireActivity();
+                    PopupMenu popupMenu = new PopupMenu(context, v);
+                    context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int itemId = item.getItemId();
+
+                            switch (itemId) {
+                                case R.id.menu_to_begin:
+                                    // TODO: Реализовать активизацию первой строки.
+                                    showMessage("Переход в начало");
+                                    return true;
+                                case R.id.menu_to_end:
+                                    // TODO: Реализовать активизацию последней строки.
+                                    showMessage("Переход в конец");
+                                    return true;
+                            }
+                            return true;
+                        }
+                    });
+                    popupMenu.show();
                 }
             });
-
         }
     }
 
@@ -110,5 +139,10 @@ public class NotesFragment extends Fragment {
         transaction.replace(R.id.note, note);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
+    }
+
+    private void showMessage(String message) {
+        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
