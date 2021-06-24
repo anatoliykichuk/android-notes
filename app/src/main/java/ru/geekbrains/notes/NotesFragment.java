@@ -21,6 +21,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textview.MaterialTextView;
+
 public class NotesFragment extends Fragment {
 
     public static final String CURRENT_NOTE = "CurrentNote";
@@ -69,48 +71,25 @@ public class NotesFragment extends Fragment {
     }
 
     private void initializeNotes(View view) {
-        LinearLayout notesList = (LinearLayout) view;
+        LinearLayout notesLayout = (LinearLayout) view;
+        LayoutInflater inflater = getLayoutInflater();
+
         String[] notes = getResources().getStringArray(R.array.notes);
 
-        float textSize = getResources().getDimension(R.dimen.note_item_text_size);
-
         for (int index = 0; index < notes.length; index++) {
-            TextView noteItem = new TextView(getContext());
-            noteItem.setText(notes[index]);
-            noteItem.setTextSize(TypedValue.COMPLEX_UNIT_SP , textSize);
+            View notesItemLayout = inflater.inflate(R.layout.notes_item, notesLayout);
+            MaterialTextView notesItem = notesItemLayout.findViewById(R.id.notes_item);
+            notesItem.setText(notes[index]);
 
-            notesList.addView(noteItem);
+            notesLayout.addView(notesItemLayout);
 
             final int noteIndex = index;
 
-            noteItem.setOnClickListener(new View.OnClickListener() {
+            notesItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     currentNote = new Note(noteIndex, notes[noteIndex], "");
                     showNote(currentNote);
-
-                    Activity context = requireActivity();
-                    PopupMenu popupMenu = new PopupMenu(context, v);
-                    context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            int itemId = item.getItemId();
-
-                            switch (itemId) {
-                                case R.id.menu_to_begin:
-                                    // TODO: Реализовать активизацию первой строки.
-                                    showMessage("Переход в начало");
-                                    return true;
-                                case R.id.menu_to_end:
-                                    // TODO: Реализовать активизацию последней строки.
-                                    showMessage("Переход в конец");
-                                    return true;
-                            }
-                            return true;
-                        }
-                    });
-                    popupMenu.show();
                 }
             });
         }
@@ -139,10 +118,5 @@ public class NotesFragment extends Fragment {
         transaction.replace(R.id.note, note);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
-    }
-
-    private void showMessage(String message) {
-        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-        toast.show();
     }
 }

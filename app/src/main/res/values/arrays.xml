@@ -3,5 +3,6 @@
     <string-array name="notes">
         <item>Покупки</item>
         <item>Конспект</item>
+        <item>Задачи</item>
     </string-array>
 </resources>
