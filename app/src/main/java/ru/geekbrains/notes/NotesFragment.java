@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -71,17 +72,19 @@ public class NotesFragment extends Fragment {
     }
 
     private void initializeNotes(View view) {
-        LinearLayout notesLayout = (LinearLayout) view;
+        FrameLayout notesParent = (FrameLayout) view;
+        LinearLayout notesContainer = (LinearLayout) notesParent.findViewById(R.id.notes_container);
+
         LayoutInflater inflater = getLayoutInflater();
 
         String[] notes = getResources().getStringArray(R.array.notes);
 
         for (int index = 0; index < notes.length; index++) {
-            View notesItemLayout = inflater.inflate(R.layout.notes_item, notesLayout);
-            MaterialTextView notesItem = notesItemLayout.findViewById(R.id.notes_item);
+            View notesItemParent = inflater.inflate(R.layout.notes_item, notesContainer);
+            TextView notesItem = (TextView) notesItemParent.findViewById(R.id.notes_item);
             notesItem.setText(notes[index]);
 
-            notesLayout.addView(notesItemLayout);
+            notesParent.addView(notesItemParent);
 
             final int noteIndex = index;
 
