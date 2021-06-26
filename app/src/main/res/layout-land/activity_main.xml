@@ -23,9 +23,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <fragment
-        android:id="@+id/notes"
-        android:name="ru.geekbrains.notes.NotesFragment"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/notes_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
