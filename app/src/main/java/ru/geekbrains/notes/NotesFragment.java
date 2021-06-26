@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -89,29 +90,13 @@ public class NotesFragment extends Fragment {
         NotesAdapter adapter = new NotesAdapter(notes);
         notesItems.setAdapter(adapter);
 
-//        LayoutInflater inflater = getLayoutInflater();
-//
-//        for (int index = 0; index < notes.length; index++) {
-////            View notesItemParent = inflater.inflate(R.layout.notes_item, notesItems);
-////            TextView notesItem = (TextView) notesItemParent.findViewById(R.id.notes_item);
-//
-//            TextView notesItem = (TextView) inflater.inflate(R.layout.notes_item, notesItems);
-//
-//            notesItem.setText(notes[index]);
-//
-//            //notesItems.addView(notesItemParent);
-//            //notesItems.addView(notesItem);
-//
-//            final int noteIndex = index;
-//
-//            notesItem.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    currentNote = new Note(noteIndex, notes[noteIndex], "");
-//                    showNote(currentNote);
-//                }
-//            });
-//        }
+        adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                currentNote = new Note(position, notes[position], "");
+                showNote(currentNote);
+            }
+        });
     }
 
     private void showNote(Note currentNote) {

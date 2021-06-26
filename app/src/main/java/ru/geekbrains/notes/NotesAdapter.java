@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     private String[] dataSource;
+    private OnItemClickListener onItemClickListener;
 
     public NotesAdapter(String[] dataSource) {
         this.dataSource = dataSource;
@@ -18,7 +19,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     @Override
     public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.notes_item, parent, false);
-        return new NotesViewHolder(v);
+        return new NotesViewHolder(v, onItemClickListener);
     }
 
     @Override
@@ -29,5 +30,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     @Override
     public int getItemCount() {
         return dataSource.length;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 }
