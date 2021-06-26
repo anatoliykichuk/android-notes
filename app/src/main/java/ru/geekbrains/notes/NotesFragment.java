@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.TypedValue;
@@ -31,11 +32,18 @@ public class NotesFragment extends Fragment {
     private Note currentNote;
     private boolean isLandscape;
 
+    public static NotesFragment newInstance() {
+        return new NotesFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        RecyclerView notesItems = view.findViewById(R.id.notes_items);
+
+        initializeNotes(notesItems);
         setHasOptionsMenu(true);
 
         return view;
@@ -44,8 +52,6 @@ public class NotesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        initializeNotes(view);
     }
 
     @Override
@@ -72,35 +78,40 @@ public class NotesFragment extends Fragment {
         }
     }
 
-    private void initializeNotes(View view) {
-        FrameLayout notesParent = (FrameLayout) view;
-        RecyclerView notesItems = (RecyclerView) notesParent.findViewById(R.id.notes_items);
-
-        LayoutInflater inflater = getLayoutInflater();
-
+    private void initializeNotes(RecyclerView notesItems) {
         String[] notes = getResources().getStringArray(R.array.notes);
 
-        for (int index = 0; index < notes.length; index++) {
-//            View notesItemParent = inflater.inflate(R.layout.notes_item, notesItems);
-//            TextView notesItem = (TextView) notesItemParent.findViewById(R.id.notes_item);
+        notesItems.setHasFixedSize(true);
 
-            TextView notesItem = (TextView) inflater.inflate(R.layout.notes_item, notesItems);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        notesItems.setLayoutManager(manager);
 
-            notesItem.setText(notes[index]);
+        NotesAdapter adapter = new NotesAdapter(notes);
+        notesItems.setAdapter(adapter);
 
-            //notesItems.addView(notesItemParent);
-            //notesItems.addView(notesItem);
-
-            final int noteIndex = index;
-
-            notesItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentNote = new Note(noteIndex, notes[noteIndex], "");
-                    showNote(currentNote);
-                }
-            });
-        }
+//        LayoutInflater inflater = getLayoutInflater();
+//
+//        for (int index = 0; index < notes.length; index++) {
+////            View notesItemParent = inflater.inflate(R.layout.notes_item, notesItems);
+////            TextView notesItem = (TextView) notesItemParent.findViewById(R.id.notes_item);
+//
+//            TextView notesItem = (TextView) inflater.inflate(R.layout.notes_item, notesItems);
+//
+//            notesItem.setText(notes[index]);
+//
+//            //notesItems.addView(notesItemParent);
+//            //notesItems.addView(notesItem);
+//
+//            final int noteIndex = index;
+//
+//            notesItem.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    currentNote = new Note(noteIndex, notes[noteIndex], "");
+//                    showNote(currentNote);
+//                }
+//            });
+//        }
     }
 
     private void showNote(Note currentNote) {
