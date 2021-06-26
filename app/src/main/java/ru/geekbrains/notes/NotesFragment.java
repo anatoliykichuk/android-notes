@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -73,18 +74,22 @@ public class NotesFragment extends Fragment {
 
     private void initializeNotes(View view) {
         FrameLayout notesParent = (FrameLayout) view;
-        LinearLayout notesContainer = (LinearLayout) notesParent.findViewById(R.id.notes_container);
+        RecyclerView notesItems = (RecyclerView) notesParent.findViewById(R.id.notes_items);
 
         LayoutInflater inflater = getLayoutInflater();
 
         String[] notes = getResources().getStringArray(R.array.notes);
 
         for (int index = 0; index < notes.length; index++) {
-            View notesItemParent = inflater.inflate(R.layout.notes_item, notesContainer);
-            TextView notesItem = (TextView) notesItemParent.findViewById(R.id.notes_item);
+//            View notesItemParent = inflater.inflate(R.layout.notes_item, notesItems);
+//            TextView notesItem = (TextView) notesItemParent.findViewById(R.id.notes_item);
+
+            TextView notesItem = (TextView) inflater.inflate(R.layout.notes_item, notesItems);
+
             notesItem.setText(notes[index]);
 
-            notesParent.addView(notesItemParent);
+            //notesItems.addView(notesItemParent);
+            //notesItems.addView(notesItem);
 
             final int noteIndex = index;
 
