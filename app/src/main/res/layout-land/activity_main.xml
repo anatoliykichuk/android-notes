@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <fragment
-        android:id="@+id/notes"
-        android:name="ru.geekbrains.notes.NotesFragment"
-        android:layout_width="@dimen/width_auto"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Notes.AppBarOverlay">
 
-    <FrameLayout
-        android:id="@+id/note"
-        android:layout_width="@dimen/width_auto"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/notes_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.Notes.PopupOverlay">
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/notes_container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/data_margin"/>
 
 </FrameLayout>

@@ -10,16 +10,22 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.textview.MaterialTextView;
 
 public class NotesFragment extends Fragment {
 
@@ -27,11 +33,18 @@ public class NotesFragment extends Fragment {
     private Note currentNote;
     private boolean isLandscape;
 
+    public static NotesFragment newInstance() {
+        return new NotesFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        RecyclerView notesItems = view.findViewById(R.id.notes_items);
+
+        initializeNotes(notesItems);
         setHasOptionsMenu(true);
 
         return view;
@@ -40,8 +53,6 @@ public class NotesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable  Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        initializeNotes(view);
     }
 
     @Override
@@ -68,52 +79,24 @@ public class NotesFragment extends Fragment {
         }
     }
 
-    private void initializeNotes(View view) {
-        LinearLayout notesList = (LinearLayout) view;
+    private void initializeNotes(RecyclerView notesItems) {
         String[] notes = getResources().getStringArray(R.array.notes);
 
-        float textSize = getResources().getDimension(R.dimen.note_item_text_size);
+        notesItems.setHasFixedSize(true);
 
-        for (int index = 0; index < notes.length; index++) {
-            TextView noteItem = new TextView(getContext());
-            noteItem.setText(notes[index]);
-            noteItem.setTextSize(TypedValue.COMPLEX_UNIT_SP , textSize);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        notesItems.setLayoutManager(manager);
 
-            notesList.addView(noteItem);
+        NotesAdapter adapter = new NotesAdapter(notes);
+        notesItems.setAdapter(adapter);
 
-            final int noteIndex = index;
-
-            noteItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentNote = new Note(noteIndex, notes[noteIndex], "");
-                    showNote(currentNote);
-
-                    Activity context = requireActivity();
-                    PopupMenu popupMenu = new PopupMenu(context, v);
-                    context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            int itemId = item.getItemId();
-
-                            switch (itemId) {
-                                case R.id.menu_to_begin:
-                                    // TODO: Реализовать активизацию первой строки.
-                                    showMessage("Переход в начало");
-                                    return true;
-                                case R.id.menu_to_end:
-                                    // TODO: Реализовать активизацию последней строки.
-                                    showMessage("Переход в конец");
-                                    return true;
-                            }
-                            return true;
-                        }
-                    });
-                    popupMenu.show();
-                }
-            });
-        }
+        adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                currentNote = new Note(position, notes[position], "");
+                showNote(currentNote);
+            }
+        });
     }
 
     private void showNote(Note currentNote) {
@@ -139,10 +122,5 @@ public class NotesFragment extends Fragment {
         transaction.replace(R.id.note, note);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
-    }
-
-    private void showMessage(String message) {
-        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-        toast.show();
     }
 }

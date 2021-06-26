@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="note_item_text_size">10sp</dimen>
+    <dimen name="notes_item_text_size">30sp</dimen>
     <dimen name="width_auto">0px</dimen>
     <dimen name="data_margin">55dp</dimen>
 </resources>
