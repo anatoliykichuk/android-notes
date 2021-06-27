@@ -14,12 +14,13 @@ public class Note implements Parcelable {
     public Note(String name, String description) {
         this.name = name;
         this.description = description;
-        //this.dateOfCreation = Calendar.now();
+        this.dateOfCreation = Calendar.getInstance().getTime();
     }
 
     protected Note(Parcel in) {
         name = in.readString();
         description = in.readString();
+        dateOfCreation = new Date(in.readLong());
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -55,5 +56,6 @@ public class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(description);
+        dest.writeLong(dateOfCreation.getTime());
     }
 }

@@ -91,7 +91,7 @@ public class NotesFragment extends Fragment {
 
         switch (itemId) {
             case R.id.menu_add:
-                notes.add(new Note("<Пустая заметка>>", ""));
+                notes.add(new Note("<Пустая заметка>", ""));
                 adapter.notifyItemInserted(notes.getPosition());
                 notesItems.scrollToPosition(notes.getPosition());
                 return true;
