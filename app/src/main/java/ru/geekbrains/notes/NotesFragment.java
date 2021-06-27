@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import ru.geekbrains.notes.data.Note;
 import ru.geekbrains.notes.data.Notes;
@@ -27,6 +30,8 @@ public class NotesFragment extends Fragment {
     public static final String CURRENT_NOTE = "CurrentNote";
     private Note currentNote;
     private Notes notes;
+    private NotesAdapter adapter;
+    private RecyclerView notesItems;
     private boolean isLandscape;
 
     public static NotesFragment newInstance() {
@@ -38,7 +43,7 @@ public class NotesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
-        RecyclerView notesItems = view.findViewById(R.id.notes_items);
+        notesItems = view.findViewById(R.id.notes_items);
 
         initializeNotes(notesItems);
         setHasOptionsMenu(true);
@@ -75,6 +80,35 @@ public class NotesFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.notes_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.menu_add:
+                notes.add(new Note("<Пустая заметка>>", ""));
+                adapter.notifyItemInserted(notes.getPosition());
+                notesItems.scrollToPosition(notes.getPosition());
+                return true;
+
+            case R.id.menu_clear:
+                notes.clear();
+                adapter.notifyDataSetChanged();
+                return true;
+
+            case R.id.menu_about:
+                // TODO: Реализовать вывод информации о приложении.
+                showMessage("Отображение информации о приложении");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initializeNotes(RecyclerView notesItems) {
         notes = new Notes(getResources()).initialize();
 
@@ -83,7 +117,7 @@ public class NotesFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         notesItems.setLayoutManager(manager);
 
-        NotesAdapter adapter = new NotesAdapter(notes);
+        adapter = new NotesAdapter(notes);
         notesItems.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
@@ -103,6 +137,7 @@ public class NotesFragment extends Fragment {
                                 currentNote = notes.getNote(position);
                                 showNote(currentNote);
                                 return true;
+
                             case R.id.popup_menu_remove:
                                 // TODO
                                 return true;
@@ -138,5 +173,10 @@ public class NotesFragment extends Fragment {
         transaction.replace(R.id.note, note);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
+    }
+
+    private void showMessage(String message) {
+        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

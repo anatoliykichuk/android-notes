@@ -36,6 +36,11 @@ public class Notes implements INotes {
     }
 
     @Override
+    public int getPosition() {
+        return getSize() - 1;
+    }
+
+    @Override
     public void add(Note note) {
         notes.add(note);
     }
