@@ -1,4 +1,4 @@
-package ru.geekbrains.notes.ui;
+package ru.geekbrains.notes.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,8 +23,8 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import ru.geekbrains.notes.R;
-import ru.geekbrains.notes.data.Note;
-import ru.geekbrains.notes.data.Notes;
+import ru.geekbrains.notes.model.Note;
+import ru.geekbrains.notes.model.Notes;
 
 public class NotesFragment extends Fragment {
 

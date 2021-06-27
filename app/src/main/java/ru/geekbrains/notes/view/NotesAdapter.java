@@ -1,4 +1,4 @@
-package ru.geekbrains.notes.ui;
+package ru.geekbrains.notes.view;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.geekbrains.notes.R;
-import ru.geekbrains.notes.data.Notes;
+import ru.geekbrains.notes.model.Notes;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     private Notes notes;

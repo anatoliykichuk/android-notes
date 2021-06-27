@@ -1,4 +1,4 @@
-package ru.geekbrains.notes.data;
+package ru.geekbrains.notes.model;
 
 public interface INotes {
     Note getNote(int position);
