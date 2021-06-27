@@ -139,7 +139,8 @@ public class NotesFragment extends Fragment {
                                 return true;
 
                             case R.id.popup_menu_remove:
-                                // TODO
+                                notes.remove(position);
+                                adapter.notifyDataSetChanged();
                                 return true;
                         }
                         return true;
