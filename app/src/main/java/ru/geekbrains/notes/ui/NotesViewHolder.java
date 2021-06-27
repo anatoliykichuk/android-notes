@@ -1,4 +1,4 @@
-package ru.geekbrains.notes;
+package ru.geekbrains.notes.ui;
 
 import android.view.View;
 import android.widget.TextView;

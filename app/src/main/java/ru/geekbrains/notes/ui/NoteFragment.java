@@ -1,4 +1,4 @@
-package ru.geekbrains.notes;
+package ru.geekbrains.notes.ui;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.data.Note;
 
 public class NoteFragment extends Fragment {

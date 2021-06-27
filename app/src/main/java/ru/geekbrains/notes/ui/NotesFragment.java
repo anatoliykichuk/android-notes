@@ -1,4 +1,4 @@
-package ru.geekbrains.notes;
+package ru.geekbrains.notes.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.data.Note;
 import ru.geekbrains.notes.data.Notes;
 
