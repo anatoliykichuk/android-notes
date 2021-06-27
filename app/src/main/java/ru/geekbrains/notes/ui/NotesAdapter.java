@@ -1,4 +1,4 @@
-package ru.geekbrains.notes;
+package ru.geekbrains.notes.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,12 +7,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import ru.geekbrains.notes.R;
+import ru.geekbrains.notes.data.Notes;
+
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
-    private String[] dataSource;
+    private Notes notes;
     private OnItemClickListener onItemClickListener;
 
-    public NotesAdapter(String[] dataSource) {
-        this.dataSource = dataSource;
+    public NotesAdapter(Notes notes) {
+        this.notes = notes;
     }
 
     @NonNull
@@ -24,12 +27,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-        holder.getNotesItem().setText(dataSource[position]);
+        holder.getNotesItem().setText(notes.getNote(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return dataSource.length;
+        return notes.getSize();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

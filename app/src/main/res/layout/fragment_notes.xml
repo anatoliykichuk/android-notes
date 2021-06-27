@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layoutManager="LinearLayoutManager"
-        tools:context=".NotesFragment">
+        tools:context=".ui.NotesFragment">
     </androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>
