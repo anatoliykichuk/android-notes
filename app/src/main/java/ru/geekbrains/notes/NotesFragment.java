@@ -13,24 +13,20 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.textview.MaterialTextView;
+import ru.geekbrains.notes.data.Note;
+import ru.geekbrains.notes.data.Notes;
 
 public class NotesFragment extends Fragment {
 
     public static final String CURRENT_NOTE = "CurrentNote";
     private Note currentNote;
+    private Notes notes;
     private boolean isLandscape;
 
     public static NotesFragment newInstance() {
@@ -71,7 +67,7 @@ public class NotesFragment extends Fragment {
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
-            currentNote = new Note(0, getResources().getStringArray(R.array.notes)[0], "");
+            currentNote = new Note(getResources().getStringArray(R.array.notes)[0], "");
         }
 
         if (isLandscape) {
@@ -80,7 +76,7 @@ public class NotesFragment extends Fragment {
     }
 
     private void initializeNotes(RecyclerView notesItems) {
-        String[] notes = getResources().getStringArray(R.array.notes);
+        notes = new Notes(getResources()).initialize();
 
         notesItems.setHasFixedSize(true);
 
@@ -104,13 +100,11 @@ public class NotesFragment extends Fragment {
 
                         switch (itemId) {
                             case R.id.popup_menu_edit:
-                                // TODO: Реализовать активизацию первой строки.
-                                currentNote = new Note(position, notes[position], "");
+                                currentNote = notes.getNote(position);
                                 showNote(currentNote);
                                 return true;
                             case R.id.popup_menu_remove:
-                                // TODO: Реализовать активизацию последней строки.
-
+                                // TODO
                                 return true;
                         }
                         return true;
