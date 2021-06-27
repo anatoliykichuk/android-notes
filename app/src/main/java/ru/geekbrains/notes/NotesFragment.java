@@ -93,8 +93,30 @@ public class NotesFragment extends Fragment {
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                currentNote = new Note(position, notes[position], "");
-                showNote(currentNote);
+                Activity context  = requireActivity();
+                PopupMenu popupMenu = new PopupMenu(context, view);
+                context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int itemId = item.getItemId();
+
+                        switch (itemId) {
+                            case R.id.popup_menu_edit:
+                                // TODO: Реализовать активизацию первой строки.
+                                currentNote = new Note(position, notes[position], "");
+                                showNote(currentNote);
+                                return true;
+                            case R.id.popup_menu_remove:
+                                // TODO: Реализовать активизацию последней строки.
+
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
     }
