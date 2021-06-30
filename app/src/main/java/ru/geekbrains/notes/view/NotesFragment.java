@@ -124,7 +124,7 @@ public class NotesFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         notesItems.setLayoutManager(manager);
 
-        adapter = new NotesAdapter(notes);
+        adapter = new NotesAdapter(this);
         notesItems.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {

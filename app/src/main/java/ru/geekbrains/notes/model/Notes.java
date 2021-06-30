@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ru.geekbrains.notes.R;
-
 public class Notes implements INotes {
     private static final String NOTES = "Notes";
 

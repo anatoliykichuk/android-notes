@@ -13,13 +13,10 @@ import ru.geekbrains.notes.model.Notes;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     private Notes notes;
-    private Fragment fragment;
+    private final Fragment fragment;
     private OnItemClickListener onItemClickListener;
 
-    public NotesAdapter(Notes notes) {
-        this.notes = notes;
-    }
-    public NotesAdapter(Fragment fragment) {
+    public NotesAdapter(Fragment fragment){
         this.fragment = fragment;
     }
 
