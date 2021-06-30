@@ -16,12 +16,17 @@ public class Notes implements INotes {
         this.resources = resources;
     }
 
-    public Notes initialize() {
+    public Notes initialize(INotesResponse response) {
         String[] notesName = resources.getStringArray(R.array.notes);
 
         for (int index = 0; index < notesName.length; index++) {
             notes.add(new Note(notesName[index], ""));
         }
+
+        if (response != null) {
+            response.initialized(this);
+        }
+
         return this;
     }
 
