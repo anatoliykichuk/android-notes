@@ -2,30 +2,56 @@ package ru.geekbrains.notes.model;
 
 import android.content.res.Resources;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ru.geekbrains.notes.R;
 
 public class Notes implements INotes {
-    private List<Note> notes;
-    private Resources resources;
+    private static final String NOTES = "Notes";
 
-    public Notes(Resources resources) {
+    private FirebaseFirestore store = FirebaseFirestore.getInstance();
+    private CollectionReference collection = store.collection(NOTES);
+
+    private List<Note> notes;
+
+    public Notes() {
         notes = new ArrayList<>();
-        this.resources = resources;
     }
 
+    @Override
     public Notes initialize(INotesResponse response) {
-        String[] notesName = resources.getStringArray(R.array.notes);
+        collection.orderBy(NoteMapping.Fields.DATE_OF_CREATION, Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            notes.clear();
 
-        for (int index = 0; index < notesName.length; index++) {
-            notes.add(new Note(notesName[index], ""));
-        }
+                            for (QueryDocumentSnapshot result : task.getResult()) {
+                                Map<String, Object> document = result.getData();
+                                Note note = NoteMapping.noteByDocument(result.getId(), document);
+                                notes.add(note);
+                            }
 
-        if (response != null) {
-            response.initialized(this);
-        }
+                            response.initialized(Notes.this);
+                        }
+                    }
+                });
 
         return this;
     }
@@ -37,7 +63,7 @@ public class Notes implements INotes {
 
     @Override
     public int getSize() {
-        return notes.size();
+        return notes == null ? 0 : notes.size();
     }
 
     @Override
@@ -47,21 +73,34 @@ public class Notes implements INotes {
 
     @Override
     public void add(Note note) {
+        collection.add(note.getId()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference document) {
+                note.setId(document.getId());
+            }
+        });
+
         notes.add(note);
     }
 
     @Override
     public void remove(int position) {
+        collection.document(notes.get(position).getId()).delete();
         notes.remove(position);
     }
 
     @Override
     public void update(int position, Note note) {
+        collection.document(note.getId()).set(NoteMapping.documentByNote(note));
         notes.set(position, note);
     }
 
     @Override
     public void clear() {
+        for (Note note : notes) {
+            collection.document(note.getId()).delete();
+        }
+
         notes.clear();
     }
 }

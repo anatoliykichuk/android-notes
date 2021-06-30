@@ -23,6 +23,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import ru.geekbrains.notes.R;
+import ru.geekbrains.notes.model.INotesResponse;
 import ru.geekbrains.notes.model.Note;
 import ru.geekbrains.notes.model.Notes;
 
@@ -111,7 +112,12 @@ public class NotesFragment extends Fragment {
     }
 
     private void initializeNotes(RecyclerView notesItems) {
-        notes = new Notes(getResources()).initialize();
+        notes = new Notes().initialize(new INotesResponse() {
+            @Override
+            public void initialized(Notes notes) {
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         notesItems.setHasFixedSize(true);
 

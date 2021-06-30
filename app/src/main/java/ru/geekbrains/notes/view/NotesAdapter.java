@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.geekbrains.notes.R;
@@ -12,10 +13,19 @@ import ru.geekbrains.notes.model.Notes;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     private Notes notes;
+    private Fragment fragment;
     private OnItemClickListener onItemClickListener;
 
     public NotesAdapter(Notes notes) {
         this.notes = notes;
+    }
+    public NotesAdapter(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+    public void setNotes(Notes notes) {
+        this.notes = notes;
+        notifyDataSetChanged();
     }
 
     @NonNull
