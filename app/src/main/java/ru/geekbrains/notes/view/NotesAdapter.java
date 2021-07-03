@@ -39,7 +39,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
 
     @Override
     public int getItemCount() {
-        return notes.getSize();
+        return notes == null ? 0 : notes.getSize();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

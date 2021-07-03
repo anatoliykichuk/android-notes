@@ -71,7 +71,7 @@ public class Notes implements INotes {
 
     @Override
     public void add(Note note) {
-        collection.add(note.getId()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        collection.add(note).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference document) {
                 note.setId(document.getId());

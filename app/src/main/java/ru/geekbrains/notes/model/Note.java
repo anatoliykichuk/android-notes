@@ -47,7 +47,7 @@ public class Note implements Parcelable {
     }
 
     public void setId(String id) {
-        id = id;
+        this.id = id;
     }
 
     public String getName() {
