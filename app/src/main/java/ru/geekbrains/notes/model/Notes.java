@@ -1,7 +1,5 @@
 package ru.geekbrains.notes.model;
 
-import android.content.res.Resources;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;

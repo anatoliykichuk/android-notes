@@ -75,8 +75,6 @@ public class NotesFragment extends Fragment {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
 
         } else if (notes != null && notes.getSize() > 0) {
-            // TODO: удалить
-            //currentNote = new Note(getResources().getStringArray(R.array.notes)[0], "");
             currentNote = notes.getNote(0);
         }
 
