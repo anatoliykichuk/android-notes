@@ -126,6 +126,8 @@ public class NotesFragment extends Fragment {
         notesItems.setLayoutManager(manager);
 
         adapter = new NotesAdapter(this);
+        adapter.setNotes(notes);
+
         notesItems.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
