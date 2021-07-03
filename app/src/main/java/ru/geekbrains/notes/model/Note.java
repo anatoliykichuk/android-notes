@@ -1,4 +1,4 @@
-package ru.geekbrains.notes.data;
+package ru.geekbrains.notes.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Note implements Parcelable {
+    private String id;
     private String name;
     private String description;
     private Date dateOfCreation;
@@ -15,6 +16,12 @@ public class Note implements Parcelable {
         this.name = name;
         this.description = description;
         this.dateOfCreation = Calendar.getInstance().getTime();
+    }
+
+    public Note(String name, String description, Date dateOfCreation) {
+        this.name = name;
+        this.description = description;
+        this.dateOfCreation = dateOfCreation;
     }
 
     protected Note(Parcel in) {
@@ -34,6 +41,14 @@ public class Note implements Parcelable {
             return new Note[size];
         }
     };
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

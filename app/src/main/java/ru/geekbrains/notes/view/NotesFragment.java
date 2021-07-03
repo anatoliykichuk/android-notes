@@ -1,4 +1,4 @@
-package ru.geekbrains.notes.ui;
+package ru.geekbrains.notes.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,8 +23,9 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import ru.geekbrains.notes.R;
-import ru.geekbrains.notes.data.Note;
-import ru.geekbrains.notes.data.Notes;
+import ru.geekbrains.notes.model.INotesResponse;
+import ru.geekbrains.notes.model.Note;
+import ru.geekbrains.notes.model.Notes;
 
 public class NotesFragment extends Fragment {
 
@@ -72,8 +73,9 @@ public class NotesFragment extends Fragment {
 
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
-        } else {
-            currentNote = new Note(getResources().getStringArray(R.array.notes)[0], "");
+
+        } else if (notes != null && notes.getSize() > 0) {
+            currentNote = notes.getNote(0);
         }
 
         if (isLandscape) {
@@ -111,14 +113,21 @@ public class NotesFragment extends Fragment {
     }
 
     private void initializeNotes(RecyclerView notesItems) {
-        notes = new Notes(getResources()).initialize();
+        notes = new Notes().initialize(new INotesResponse() {
+            @Override
+            public void initialized(Notes notes) {
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         notesItems.setHasFixedSize(true);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         notesItems.setLayoutManager(manager);
 
-        adapter = new NotesAdapter(notes);
+        adapter = new NotesAdapter(this);
+        adapter.setNotes(notes);
+
         notesItems.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
