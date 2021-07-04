@@ -26,12 +26,12 @@ import android.widget.Toast;
 
 import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.model.INotesResponse;
+import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
 import ru.geekbrains.notes.model.Notes;
 
 public class NotesFragment extends Fragment {
 
-    public static final String CURRENT_NOTE = "CurrentNote";
     private Note currentNote;
     private Notes notes;
     private NotesAdapter adapter;
@@ -81,7 +81,7 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(CURRENT_NOTE, currentNote);
+        outState.putParcelable(Keys.CURRENT_NOTE, currentNote);
         super.onSaveInstanceState(outState);
     }
 
@@ -93,14 +93,14 @@ public class NotesFragment extends Fragment {
                 Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+            currentNote = savedInstanceState.getParcelable(Keys.CURRENT_NOTE);
 
         } else if (notes != null && notes.getSize() > 0) {
             currentNote = notes.getNote(0);
         }
 
         if (isLandscape) {
-            showNoteNearby(currentNote);
+            showNote();
         }
     }
 
@@ -168,7 +168,7 @@ public class NotesFragment extends Fragment {
         switch (itemId) {
             case R.id.popup_menu_edit:
                 currentNote = notes.getNote(notesPosition);
-                showNote(currentNote);
+                showNote();
                 return true;
 
             case R.id.popup_menu_remove:
@@ -179,29 +179,15 @@ public class NotesFragment extends Fragment {
         return true;
     };
 
-    private void showNote(Note currentNote) {
-        if (isLandscape) {
-            showNoteNearby(currentNote);
-        } else {
-            showNoteSeparately(currentNote);
-        }
-    }
+    private void showNote() {
+        int containerId = isLandscape ? R.id.fragment_containerIfLandscape : R.id.fragment_container;
 
-    private void showNoteSeparately(Note currentNote) {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), NoteActivity.class);
-        intent.putExtra(NoteFragment.CURRENT_NOTE, currentNote);
-        startActivity(intent);
-    }
-
-    private void showNoteNearby(Note currentNote) {
-        NoteFragment note = NoteFragment.newInstance(currentNote);
-
-        FragmentManager manager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.note, note);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.commit();
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(containerId, NoteFragment.newInstance(currentNote))
+                .addToBackStack(null)
+                .commit();
     }
 
     private void showMessage(String message) {

@@ -15,17 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ru.geekbrains.notes.R;
+import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
 
 public class NoteFragment extends Fragment {
 
-    public static final String CURRENT_NOTE = "CurrentNote";
     private static Note currentNote;
 
     public static NoteFragment newInstance(Note currentNote) {
         NoteFragment fragment = new NoteFragment();
         Bundle args = new Bundle();
-        args.putParcelable(CURRENT_NOTE, currentNote);
+        args.putParcelable(Keys.CURRENT_NOTE, currentNote);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,7 +39,7 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            currentNote = getArguments().getParcelable(CURRENT_NOTE);
+            currentNote = getArguments().getParcelable(Keys.CURRENT_NOTE);
         }
     }
 
@@ -81,4 +81,6 @@ public class NoteFragment extends Fragment {
         Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
         toast.show();
     }
+
+
 }

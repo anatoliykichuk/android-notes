@@ -37,7 +37,7 @@ public class NoteActivity extends AppCompatActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.note_container, fragment)
+                .replace(R.id.fragment_container, fragment)
                 .commit();
     }
 
