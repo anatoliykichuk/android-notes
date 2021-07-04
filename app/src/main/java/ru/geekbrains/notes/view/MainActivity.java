@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         addFragment();
-        initializeToolBar();
+        initializeToolBar(R.id.notes_toolbar);
     }
 
     private void addFragment() {
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void initializeToolBar() {
-        Toolbar toolbar = findViewById(R.id.notes_toolbar);
+    public void initializeToolBar(int toolBarId) {
+        Toolbar toolbar = findViewById(toolBarId);
         setSupportActionBar(toolbar);
     }
 }
