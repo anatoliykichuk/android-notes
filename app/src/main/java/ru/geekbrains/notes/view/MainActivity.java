@@ -18,17 +18,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        addFragment();
         initializeToolBar();
-        addFragment(NotesFragment.newInstance());
     }
 
-    private void addFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.notes_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void addFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.notes_container, NotesFragment.newInstance())
+                .commit();
     }
 
     private void initializeToolBar() {

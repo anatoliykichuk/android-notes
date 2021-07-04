@@ -1,6 +1,7 @@
 package ru.geekbrains.notes.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.print.PrinterCapabilitiesInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,10 +36,29 @@ public class NotesFragment extends Fragment {
     private Notes notes;
     private NotesAdapter adapter;
     private RecyclerView notesItems;
+    private int notesPosition;
+
     private boolean isLandscape;
 
     public static NotesFragment newInstance() {
         return new NotesFragment();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        notes = new Notes().initialize(new INotesResponse() {
+            @Override
+            public void initialized(Notes notes) {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -89,6 +110,11 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
@@ -113,21 +139,12 @@ public class NotesFragment extends Fragment {
     }
 
     private void initializeNotes(RecyclerView notesItems) {
-        notes = new Notes().initialize(new INotesResponse() {
-            @Override
-            public void initialized(Notes notes) {
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        notesItems.setHasFixedSize(true);
-
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        notesItems.setLayoutManager(manager);
-
         adapter = new NotesAdapter(this);
         adapter.setNotes(notes);
 
+        notesItems.setHasFixedSize(true);
+        notesItems.setLayoutManager(manager);
         notesItems.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
@@ -137,29 +154,30 @@ public class NotesFragment extends Fragment {
                 PopupMenu popupMenu = new PopupMenu(context, view);
                 context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
 
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int itemId = item.getItemId();
+                notesPosition = position;
 
-                        switch (itemId) {
-                            case R.id.popup_menu_edit:
-                                currentNote = notes.getNote(position);
-                                showNote(currentNote);
-                                return true;
-
-                            case R.id.popup_menu_remove:
-                                notes.remove(position);
-                                adapter.notifyDataSetChanged();
-                                return true;
-                        }
-                        return true;
-                    }
-                });
+                popupMenu.setOnMenuItemClickListener(onPopupMenuItemClickListener);
                 popupMenu.show();
             }
         });
     }
+
+    private PopupMenu.OnMenuItemClickListener onPopupMenuItemClickListener = (MenuItem item) ->  {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.popup_menu_edit:
+                currentNote = notes.getNote(notesPosition);
+                showNote(currentNote);
+                return true;
+
+            case R.id.popup_menu_remove:
+                notes.remove(notesPosition);
+                adapter.notifyDataSetChanged();
+                return true;
+        }
+        return true;
+    };
 
     private void showNote(Note currentNote) {
         if (isLandscape) {
