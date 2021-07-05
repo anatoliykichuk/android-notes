@@ -2,19 +2,15 @@ package ru.geekbrains.notes.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.print.PrinterCapabilitiesInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,12 +24,12 @@ import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.model.INotesResponse;
 import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
-import ru.geekbrains.notes.model.Notes;
+import ru.geekbrains.notes.model.NotesRepository;
 
 public class NotesFragment extends Fragment {
 
     private Note currentNote;
-    private Notes notes;
+    private NotesRepository notes;
     private NotesAdapter adapter;
     private RecyclerView notesItems;
     private int notesPosition;
@@ -54,9 +50,9 @@ public class NotesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        notes = new Notes().initialize(new INotesResponse() {
+        notes = new NotesRepository().initialize(new INotesResponse() {
             @Override
-            public void initialized(Notes notes) {
+            public void initialized(NotesRepository notes) {
                 adapter.notifyDataSetChanged();
             }
         });

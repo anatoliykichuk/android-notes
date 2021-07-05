@@ -1,7 +1,7 @@
 package ru.geekbrains.notes.model;
 
-public interface INotes {
-    INotes initialize(INotesResponse response);
+public interface INotesSource {
+    INotesSource initialize(INotesResponse response);
     Note getNote(int position);
 
     int getSize();

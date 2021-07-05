@@ -1,5 +1,5 @@
 package ru.geekbrains.notes.model;
 
 public interface INotesResponse {
-    void initialized(Notes notes);
+    void initialized(NotesRepository notes);
 }

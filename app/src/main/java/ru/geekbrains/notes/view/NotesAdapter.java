@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.geekbrains.notes.R;
-import ru.geekbrains.notes.model.Notes;
+import ru.geekbrains.notes.model.NotesRepository;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
-    private Notes notes;
+    private NotesRepository notes;
     private final Fragment fragment;
     private OnItemClickListener onItemClickListener;
 
@@ -20,7 +20,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
         this.fragment = fragment;
     }
 
-    public void setNotes(Notes notes) {
+    public void setNotes(NotesRepository notes) {
         this.notes = notes;
         notifyDataSetChanged();
     }

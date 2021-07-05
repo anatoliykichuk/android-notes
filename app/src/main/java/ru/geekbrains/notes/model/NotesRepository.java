@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Notes implements INotes {
+public class NotesRepository implements INotesSource {
     private static final String NOTES = "Notes";
 
     private FirebaseFirestore store = FirebaseFirestore.getInstance();
@@ -24,12 +24,12 @@ public class Notes implements INotes {
 
     private List<Note> notes;
 
-    public Notes() {
+    public NotesRepository() {
         notes = new ArrayList<>();
     }
 
     @Override
-    public Notes initialize(INotesResponse response) {
+    public NotesRepository initialize(INotesResponse response) {
         collection.orderBy(NoteMapping.Fields.DATE_OF_CREATION, Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -44,7 +44,7 @@ public class Notes implements INotes {
                                 notes.add(note);
                             }
 
-                            response.initialized(Notes.this);
+                            response.initialized(NotesRepository.this);
                         }
                     }
                 });
