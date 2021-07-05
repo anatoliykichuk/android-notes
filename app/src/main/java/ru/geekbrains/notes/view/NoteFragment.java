@@ -36,7 +36,6 @@ public class NoteFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        ((MainActivity) context).initializeToolBar();
     }
 
     @Override
