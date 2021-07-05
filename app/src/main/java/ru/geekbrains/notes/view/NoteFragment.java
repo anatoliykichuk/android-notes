@@ -8,6 +8,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,7 @@ public class NoteFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        ((MainActivity) context).initializeToolBar(R.id.note_toolbar);
+        ((MainActivity) context).initializeToolBar();
     }
 
     @Override
@@ -57,9 +59,16 @@ public class NoteFragment extends Fragment {
         EditText descriptionView = view.findViewById(R.id.description);
         descriptionView.setText(currentNote.getDescription());
 
+        setHasOptionsMenu(true);
+
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull  Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.note_menu, menu);
+    }
 
     @Override
     public void onDetach() {
@@ -83,6 +92,4 @@ public class NoteFragment extends Fragment {
         Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
         toast.show();
     }
-
-
 }

@@ -47,6 +47,7 @@ public class NotesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        ((MainActivity) context).initializeToolBar();
     }
 
     @Override
@@ -106,6 +107,7 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.notes_menu, menu);
     }
 
