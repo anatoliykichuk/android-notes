@@ -20,10 +20,12 @@ import android.widget.Toast;
 import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
+import ru.geekbrains.notes.observer.Publisher;
 
 public class NoteFragment extends Fragment {
 
     private static Note currentNote;
+    private Publisher publisher;
 
     public static NoteFragment newInstance(Note currentNote) {
         NoteFragment fragment = new NoteFragment();
@@ -36,6 +38,7 @@ public class NoteFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        publisher = ((MainActivity) context).getPublisher();
     }
 
     @Override
@@ -71,6 +74,7 @@ public class NoteFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        publisher = null;
         super.onDetach();
     }
 
@@ -90,5 +94,12 @@ public class NoteFragment extends Fragment {
     private void showMessage(String message) {
         Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        publisher.notify(currentNote);
     }
 }

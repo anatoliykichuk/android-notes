@@ -25,6 +25,8 @@ import ru.geekbrains.notes.model.INotesResponse;
 import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
 import ru.geekbrains.notes.model.NotesRepository;
+import ru.geekbrains.notes.observer.Observer;
+import ru.geekbrains.notes.observer.Publisher;
 
 public class NotesFragment extends Fragment {
 
@@ -33,6 +35,7 @@ public class NotesFragment extends Fragment {
     private NotesAdapter adapter;
     private RecyclerView notesItems;
     private int notesPosition;
+    private Publisher publisher;
 
     private boolean isLandscape;
 
@@ -43,6 +46,7 @@ public class NotesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        publisher = ((MainActivity)context).getPublisher();
     }
 
     @Override
@@ -108,6 +112,7 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        publisher = null;
         super.onDetach();
     }
 
@@ -117,9 +122,21 @@ public class NotesFragment extends Fragment {
 
         switch (itemId) {
             case R.id.menu_add:
-                notes.add(new Note("<Пустая заметка>", ""));
-                adapter.notifyItemInserted(notes.getPosition());
-                notesItems.scrollToPosition(notes.getPosition());
+//                notes.add(new Note("<Пустая заметка>", ""));
+//                adapter.notifyItemInserted(notes.getPosition());
+//                notesItems.scrollToPosition(notes.getPosition());
+
+
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void update(Note note) {
+                        notes.add(note);
+                        adapter.notifyItemInserted(notes.getPosition());
+                        notesItems.scrollToPosition(notes.getPosition());
+                    }
+                });
+
+
                 return true;
 
             case R.id.menu_clear:

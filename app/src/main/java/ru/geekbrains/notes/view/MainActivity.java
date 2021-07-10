@@ -10,8 +10,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import ru.geekbrains.notes.R;
+import ru.geekbrains.notes.observer.Publisher;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Publisher publisher = new Publisher();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,5 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private void initializeToolBar() {
         Toolbar toolbar = findViewById(R.id.notes_toolbar);
         setSupportActionBar(toolbar);
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
     }
 }
