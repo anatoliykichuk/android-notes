@@ -19,7 +19,6 @@ import android.widget.EditText;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.model.Keys;
@@ -99,7 +98,7 @@ public class NoteFragment extends Fragment {
 
                 if (isModified()) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
-                            .setTitle(R.string.note_dialog_title)
+                            .setTitle(R.string.note_save_dialog_title)
                             .setCancelable(false)
                             .setPositiveButton(
                                     R.string.note_dialog_positive_button,
@@ -124,8 +123,7 @@ public class NoteFragment extends Fragment {
                                         public void onClick(DialogInterface dialog, int which) {
 
                                         }
-                                    }
-                            );
+                                    });
 
                     AlertDialog alertDialog = dialogBuilder.create();
                     alertDialog.show();

@@ -2,11 +2,13 @@ package ru.geekbrains.notes.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -122,19 +124,19 @@ public class NotesFragment extends Fragment {
 
         switch (itemId) {
             case R.id.menu_add:
-//                notes.add(new Note("<Пустая заметка>", ""));
-//                adapter.notifyItemInserted(notes.getPosition());
-//                notesItems.scrollToPosition(notes.getPosition());
+                notes.add(new Note("<Пустая заметка>", ""));
+                adapter.notifyItemInserted(notes.getPosition());
+                notesItems.scrollToPosition(notes.getPosition());
 
 
-                publisher.subscribe(new Observer() {
-                    @Override
-                    public void update(Note note) {
-                        notes.add(note);
-                        adapter.notifyItemInserted(notes.getPosition());
-                        notesItems.scrollToPosition(notes.getPosition());
-                    }
-                });
+//                publisher.subscribe(new Observer() {
+//                    @Override
+//                    public void update(Note note) {
+//                        notes.add(note);
+//                        adapter.notifyItemInserted(notes.getPosition());
+//                        notesItems.scrollToPosition(notes.getPosition());
+//                    }
+//                });
 
 
                 return true;
@@ -186,8 +188,31 @@ public class NotesFragment extends Fragment {
                 return true;
 
             case R.id.popup_menu_remove:
-                notes.remove(notesPosition);
-                adapter.notifyDataSetChanged();
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.note_remove_dialog_title)
+                        .setCancelable(false)
+                        .setPositiveButton(
+                                R.string.note_dialog_positive_button,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        notes.remove(notesPosition);
+                                        adapter.notifyDataSetChanged();
+
+                                    }
+                                })
+                        .setNegativeButton(
+                                R.string.note_dialog_negative_button,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+
                 return true;
         }
         return true;

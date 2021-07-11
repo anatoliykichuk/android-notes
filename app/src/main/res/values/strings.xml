@@ -9,8 +9,9 @@
     <string name="menu_about">О приложении</string>
     <string name="menu_save">Записать</string>
     <string name="menu_change_palette">Изменить заливку</string>
-    <string name="note_dialog_title">Сохранить изменения?</string>
+    <string name="note_save_dialog_title">Сохранить изменения?</string>
     <string name="note_dialog_positive_button">Да</string>
     <string name="note_dialog_negative_button">Нет</string>
     <string name="note_dialog_cancel_button">Отмена</string>
+    <string name="note_remove_dialog_title">Удалить заметку?</string>
 </resources>
