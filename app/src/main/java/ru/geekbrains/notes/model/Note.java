@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class Note implements Parcelable {
     private String id;
@@ -61,6 +60,12 @@ public class Note implements Parcelable {
 
     public Date getDateOfCreation() {
         return dateOfCreation;
+    }
+
+    public void update(String name, String description, Date dateOfCreation) {
+        this.name = name;
+        this.description = description;
+        this.dateOfCreation = dateOfCreation;
     }
 
     @Override

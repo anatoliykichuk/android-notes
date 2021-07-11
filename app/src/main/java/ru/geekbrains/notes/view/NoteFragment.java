@@ -105,7 +105,12 @@ public class NoteFragment extends Fragment {
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
+                                            currentNote.update(
+                                                    nameView.getText().toString(),
+                                                    descriptionView.getText().toString(),
+                                                    dateOfCreation());
 
+                                            getActivity().onBackPressed();
                                         }
                                     })
                             .setNegativeButton(
@@ -171,5 +176,15 @@ public class NoteFragment extends Fragment {
         calendar.setTime(dateOfCreation);
 
         return calendar;
+    }
+
+    private Date dateOfCreation() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(
+                dateOfCreationView.getYear(),
+                dateOfCreationView.getMonth(),
+                dateOfCreationView.getDayOfMonth());
+
+        return calendar.getTime();
     }
 }
