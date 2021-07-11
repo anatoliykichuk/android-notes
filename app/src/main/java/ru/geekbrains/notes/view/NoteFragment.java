@@ -1,10 +1,11 @@
 package ru.geekbrains.notes.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,9 +14,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.model.Keys;
@@ -25,6 +29,11 @@ import ru.geekbrains.notes.observer.Publisher;
 public class NoteFragment extends Fragment {
 
     private static Note currentNote;
+
+    private EditText nameView;
+    private EditText descriptionView;
+    private DatePicker dateOfCreationView;
+
     private Publisher publisher;
 
     public static NoteFragment newInstance(Note currentNote) {
@@ -55,11 +64,14 @@ public class NoteFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_note, container, false);
 
-        TextView nameView = view.findViewById(R.id.name);
+        nameView = view.findViewById(R.id.name);
         nameView.setText(currentNote.getName());
 
-        EditText descriptionView = view.findViewById(R.id.description);
+        descriptionView = view.findViewById(R.id.description);
         descriptionView.setText(currentNote.getDescription());
+
+        dateOfCreationView = view.findViewById(R.id.date_of_creation);
+        initializeDateOfCreationView();
 
         setHasOptionsMenu(true);
 
@@ -84,22 +96,82 @@ public class NoteFragment extends Fragment {
 
         switch (itemId) {
             case R.id.menu_save:
-                // TODO: Реализовать выбор и установку цвет азаливки.
-                showMessage("Изменение заливки");
+
+                if (isModified()) {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.note_dialog_title)
+                            .setCancelable(false)
+                            .setPositiveButton(
+                                    R.string.note_dialog_positive_button,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                            .setNegativeButton(
+                                    R.string.note_dialog_negative_button,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            getActivity().onBackPressed();
+                                        }
+                                    })
+                            .setNeutralButton(
+                                    R.string.note_dialog_cancel_button,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    }
+                            );
+
+                    AlertDialog alertDialog = dialogBuilder.create();
+                    alertDialog.show();
+
+                } else {
+                    getActivity().onBackPressed();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void showMessage(String message) {
-        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         publisher.notify(currentNote);
+    }
+
+    private void initializeDateOfCreationView() {
+        Calendar dateOfCreation = dateOfCreationAsCalendar();
+
+        dateOfCreationView.updateDate(
+                dateOfCreation.get(Calendar.YEAR),
+                dateOfCreation.get(Calendar.MONTH),
+                dateOfCreation.get(Calendar.DAY_OF_MONTH));
+    }
+
+    private boolean isModified() {
+        return !nameView.getText().equals(currentNote.getName())
+                || !descriptionView.getText().equals(currentNote.getDescription())
+                || isDateOfCreationModified();
+    }
+
+    private boolean isDateOfCreationModified() {
+        Calendar dateOfCreation = dateOfCreationAsCalendar();
+
+        return dateOfCreationView.getYear() != dateOfCreation.get(Calendar.YEAR)
+                || dateOfCreationView.getMonth() != dateOfCreation.get(Calendar.MONTH)
+                || dateOfCreationView.getDayOfMonth() != dateOfCreation.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private Calendar dateOfCreationAsCalendar() {
+        Date dateOfCreation = currentNote.getDateOfCreation();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateOfCreation);
+
+        return calendar;
     }
 }

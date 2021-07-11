@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.List;
+
 import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.observer.Publisher;
 
@@ -40,4 +42,21 @@ public class MainActivity extends AppCompatActivity {
     public Publisher getPublisher() {
         return publisher;
     }
-}
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        List fragments = getSupportFragmentManager().getFragments();
+
+        if (fragments.size() == 0) {
+            return;
+        }
+
+        Fragment fragment = (Fragment) fragments.get(0);
+
+        //if (fragment.getId() != R.id.)
+
+
+    }
+ }
