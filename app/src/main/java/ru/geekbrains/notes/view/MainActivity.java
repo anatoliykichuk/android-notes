@@ -1,14 +1,8 @@
 package ru.geekbrains.notes.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import ru.geekbrains.notes.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,16 +13,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initializeToolBar();
-        addFragment(NotesFragment.newInstance());
+        addFragment();
     }
 
-    private void addFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.notes_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void addFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, NotesFragment.newInstance())
+                .commit();
     }
 
     private void initializeToolBar() {

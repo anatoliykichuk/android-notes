@@ -24,7 +24,14 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/notes_container"
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/data_margin"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_containerIfLandscape"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

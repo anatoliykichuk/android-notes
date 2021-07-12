@@ -4,8 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_change_palette"
-        android:title="@string/change_palette"
+        android:id="@+id/menu_save"
+        android:title="@string/menu_save"
+        android:icon="@drawable/save"
         android:orderInCategory="10"
         app:showAsAction="always"/>
 </menu>

@@ -62,6 +62,12 @@ public class Note implements Parcelable {
         return dateOfCreation;
     }
 
+    public void update(String name, String description, Date dateOfCreation) {
+        this.name = name;
+        this.description = description;
+        this.dateOfCreation = dateOfCreation;
+    }
+
     @Override
     public int describeContents() {
         return 0;

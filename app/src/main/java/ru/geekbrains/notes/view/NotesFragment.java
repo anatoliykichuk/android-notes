@@ -1,15 +1,14 @@
 package ru.geekbrains.notes.view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,16 +23,18 @@ import android.widget.Toast;
 
 import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.model.INotesResponse;
+import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
-import ru.geekbrains.notes.model.Notes;
+import ru.geekbrains.notes.model.NotesRepository;
 
 public class NotesFragment extends Fragment {
 
-    public static final String CURRENT_NOTE = "CurrentNote";
     private Note currentNote;
-    private Notes notes;
+    private NotesRepository notes;
     private NotesAdapter adapter;
     private RecyclerView notesItems;
+    private int notesPosition;
+
     private boolean isLandscape;
 
     public static NotesFragment newInstance() {
@@ -41,8 +42,24 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        notes = new NotesRepository().initialize(new INotesResponse() {
+            @Override
+            public void initialized(NotesRepository notes) {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (currentNote != null) {
+            notes.update(notesPosition, currentNote);
+        }
 
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
         notesItems = view.findViewById(R.id.notes_items);
@@ -60,7 +77,7 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(CURRENT_NOTE, currentNote);
+        outState.putParcelable(Keys.CURRENT_NOTE, currentNote);
         super.onSaveInstanceState(outState);
     }
 
@@ -72,19 +89,20 @@ public class NotesFragment extends Fragment {
                 Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+            currentNote = savedInstanceState.getParcelable(Keys.CURRENT_NOTE);
 
         } else if (notes != null && notes.getSize() > 0) {
             currentNote = notes.getNote(0);
         }
 
         if (isLandscape) {
-            showNoteNearby(currentNote);
+            showNote();
         }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.notes_menu, menu);
     }
 
@@ -97,6 +115,7 @@ public class NotesFragment extends Fragment {
                 notes.add(new Note("<Пустая заметка>", ""));
                 adapter.notifyItemInserted(notes.getPosition());
                 notesItems.scrollToPosition(notes.getPosition());
+
                 return true;
 
             case R.id.menu_clear:
@@ -113,77 +132,80 @@ public class NotesFragment extends Fragment {
     }
 
     private void initializeNotes(RecyclerView notesItems) {
-        notes = new Notes().initialize(new INotesResponse() {
-            @Override
-            public void initialized(Notes notes) {
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        notesItems.setHasFixedSize(true);
-
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        notesItems.setLayoutManager(manager);
-
         adapter = new NotesAdapter(this);
         adapter.setNotes(notes);
 
+        notesItems.setHasFixedSize(true);
+        notesItems.setLayoutManager(manager);
         notesItems.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Activity context  = requireActivity();
-                PopupMenu popupMenu = new PopupMenu(context, view);
-                context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
+        setSeparator();
 
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int itemId = item.getItemId();
+        adapter.setOnItemClickListener((view, position) -> {
+            Activity context  = requireActivity();
+            PopupMenu popupMenu = new PopupMenu(context, view);
+            context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
 
-                        switch (itemId) {
-                            case R.id.popup_menu_edit:
-                                currentNote = notes.getNote(position);
-                                showNote(currentNote);
-                                return true;
+            notesPosition = position;
 
-                            case R.id.popup_menu_remove:
-                                notes.remove(position);
-                                adapter.notifyDataSetChanged();
-                                return true;
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
-            }
+            popupMenu.setOnMenuItemClickListener(onPopupMenuItemClickListener);
+            popupMenu.show();
         });
     }
 
-    private void showNote(Note currentNote) {
-        if (isLandscape) {
-            showNoteNearby(currentNote);
-        } else {
-            showNoteSeparately(currentNote);
+    private void setSeparator() {
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(
+                getContext(),  LinearLayoutManager.VERTICAL);
+
+        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator, null));
+        notesItems.addItemDecoration(itemDecoration);
+    }
+
+    private PopupMenu.OnMenuItemClickListener onPopupMenuItemClickListener = (MenuItem item) ->  {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.popup_menu_edit:
+                currentNote = notes.getNote(notesPosition);
+                showNote();
+                return true;
+
+            case R.id.popup_menu_remove:
+                askQuestion();
+
+                return true;
         }
+        return true;
+    };
+
+    private void askQuestion() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.note_remove_dialog_title)
+                .setCancelable(false)
+                .setPositiveButton(R.string.note_dialog_positive_button, (dialog, which) -> {
+                            notes.remove(notesPosition);
+                            adapter.notifyDataSetChanged();
+
+                        })
+
+                .setNegativeButton(R.string.note_dialog_negative_button, (dialog, which) -> {
+
+                        });
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
     }
 
-    private void showNoteSeparately(Note currentNote) {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), NoteActivity.class);
-        intent.putExtra(NoteFragment.CURRENT_NOTE, currentNote);
-        startActivity(intent);
-    }
+    private void showNote() {
+        int containerId = isLandscape ? R.id.fragment_containerIfLandscape : R.id.fragment_container;
 
-    private void showNoteNearby(Note currentNote) {
-        NoteFragment note = NoteFragment.newInstance(currentNote);
-
-        FragmentManager manager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.note, note);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.commit();
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(containerId, NoteFragment.newInstance(currentNote))
+                .addToBackStack(null)
+                .commit();
     }
 
     private void showMessage(String message) {

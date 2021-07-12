@@ -1,31 +1,26 @@
 package ru.geekbrains.notes.view;
 
 import android.view.View;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
 
 public class NotesViewHolder extends RecyclerView.ViewHolder {
-    private TextView notesItem;
-    private NotesAdapter.OnItemClickListener onItemClickListener;
+
+    private final CardView notesItem;
 
     public NotesViewHolder(@NonNull View itemView, NotesAdapter.OnItemClickListener onItemClickListener) {
         super(itemView);
-        notesItem = (TextView) itemView;
-        this.onItemClickListener = onItemClickListener;
+        notesItem = (CardView) itemView;
 
-        notesItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, getAdapterPosition());
-                }
+        notesItem.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(v, getAdapterPosition());
             }
         });
     }
 
-    public TextView getNotesItem() {
+    public CardView getNotesItem() {
         return notesItem;
     }
 }
