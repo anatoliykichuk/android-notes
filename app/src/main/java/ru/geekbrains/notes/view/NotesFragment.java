@@ -58,6 +58,10 @@ public class NotesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        if (currentNote != null) {
+            notes.update(notesPosition, currentNote);
+        }
+
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
         notesItems = view.findViewById(R.id.notes_items);
 
