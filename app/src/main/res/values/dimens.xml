@@ -4,4 +4,5 @@
     <dimen name="notes_item_date_size">10sp</dimen>
     <dimen name="width_auto">0px</dimen>
     <dimen name="data_margin">55dp</dimen>
+    <dimen name="separator_height">10dp</dimen>
 </resources>

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -139,6 +140,8 @@ public class NotesFragment extends Fragment {
         notesItems.setLayoutManager(manager);
         notesItems.setAdapter(adapter);
 
+        setSeparator();
+
         adapter.setOnItemClickListener((view, position) -> {
             Activity context  = requireActivity();
             PopupMenu popupMenu = new PopupMenu(context, view);
@@ -149,6 +152,14 @@ public class NotesFragment extends Fragment {
             popupMenu.setOnMenuItemClickListener(onPopupMenuItemClickListener);
             popupMenu.show();
         });
+    }
+
+    private void setSeparator() {
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(
+                getContext(),  LinearLayoutManager.VERTICAL);
+
+        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator, null));
+        notesItems.addItemDecoration(itemDecoration);
     }
 
     private PopupMenu.OnMenuItemClickListener onPopupMenuItemClickListener = (MenuItem item) ->  {
