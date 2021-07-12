@@ -27,8 +27,6 @@ import ru.geekbrains.notes.model.INotesResponse;
 import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
 import ru.geekbrains.notes.model.NotesRepository;
-import ru.geekbrains.notes.observer.Observer;
-import ru.geekbrains.notes.observer.Publisher;
 
 public class NotesFragment extends Fragment {
 
@@ -37,18 +35,11 @@ public class NotesFragment extends Fragment {
     private NotesAdapter adapter;
     private RecyclerView notesItems;
     private int notesPosition;
-    private Publisher publisher;
 
     private boolean isLandscape;
 
     public static NotesFragment newInstance() {
         return new NotesFragment();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        publisher = ((MainActivity)context).getPublisher();
     }
 
     @Override
@@ -113,12 +104,6 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        publisher = null;
-        super.onDetach();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
@@ -127,17 +112,6 @@ public class NotesFragment extends Fragment {
                 notes.add(new Note("<Пустая заметка>", ""));
                 adapter.notifyItemInserted(notes.getPosition());
                 notesItems.scrollToPosition(notes.getPosition());
-
-
-//                publisher.subscribe(new Observer() {
-//                    @Override
-//                    public void update(Note note) {
-//                        notes.add(note);
-//                        adapter.notifyItemInserted(notes.getPosition());
-//                        notesItems.scrollToPosition(notes.getPosition());
-//                    }
-//                });
-
 
                 return true;
 
@@ -188,35 +162,39 @@ public class NotesFragment extends Fragment {
                 return true;
 
             case R.id.popup_menu_remove:
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.note_remove_dialog_title)
-                        .setCancelable(false)
-                        .setPositiveButton(
-                                R.string.note_dialog_positive_button,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        notes.remove(notesPosition);
-                                        adapter.notifyDataSetChanged();
-
-                                    }
-                                })
-                        .setNegativeButton(
-                                R.string.note_dialog_negative_button,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                });
-
-                AlertDialog alertDialog = dialogBuilder.create();
-                alertDialog.show();
+                askQuestion();
 
                 return true;
         }
         return true;
     };
+
+    private void askQuestion() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.note_remove_dialog_title)
+                .setCancelable(false)
+                .setPositiveButton(
+                        R.string.note_dialog_positive_button,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                notes.remove(notesPosition);
+                                adapter.notifyDataSetChanged();
+
+                            }
+                        })
+                .setNegativeButton(
+                        R.string.note_dialog_negative_button,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+    }
 
     private void showNote() {
         int containerId = isLandscape ? R.id.fragment_containerIfLandscape : R.id.fragment_container;

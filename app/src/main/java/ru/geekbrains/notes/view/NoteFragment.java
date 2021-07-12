@@ -23,7 +23,6 @@ import java.util.Date;
 import ru.geekbrains.notes.R;
 import ru.geekbrains.notes.model.Keys;
 import ru.geekbrains.notes.model.Note;
-import ru.geekbrains.notes.observer.Publisher;
 
 public class NoteFragment extends Fragment {
 
@@ -33,20 +32,12 @@ public class NoteFragment extends Fragment {
     private EditText descriptionView;
     private DatePicker dateOfCreationView;
 
-    private Publisher publisher;
-
     public static NoteFragment newInstance(Note currentNote) {
         NoteFragment fragment = new NoteFragment();
         Bundle args = new Bundle();
         args.putParcelable(Keys.CURRENT_NOTE, currentNote);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        publisher = ((MainActivity) context).getPublisher();
     }
 
     @Override
@@ -84,12 +75,6 @@ public class NoteFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        publisher = null;
-        super.onDetach();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
@@ -97,41 +82,7 @@ public class NoteFragment extends Fragment {
             case R.id.menu_save:
 
                 if (isModified()) {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
-                            .setTitle(R.string.note_save_dialog_title)
-                            .setCancelable(false)
-                            .setPositiveButton(
-                                    R.string.note_dialog_positive_button,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            currentNote.update(
-                                                    nameView.getText().toString(),
-                                                    descriptionView.getText().toString(),
-                                                    dateOfCreation());
-
-                                            getActivity().onBackPressed();
-                                        }
-                                    })
-                            .setNegativeButton(
-                                    R.string.note_dialog_negative_button,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            getActivity().onBackPressed();
-                                        }
-                                    })
-                            .setNeutralButton(
-                                    R.string.note_dialog_cancel_button,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    });
-
-                    AlertDialog alertDialog = dialogBuilder.create();
-                    alertDialog.show();
+                    askQuestion();
 
                 } else {
                     getActivity().onBackPressed();
@@ -141,10 +92,42 @@ public class NoteFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        publisher.notify(currentNote);
+    private void askQuestion() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
+                .setTitle(R.string.note_save_dialog_title)
+                .setCancelable(false)
+                .setPositiveButton(
+                        R.string.note_dialog_positive_button,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                currentNote.update(
+                                        nameView.getText().toString(),
+                                        descriptionView.getText().toString(),
+                                        dateOfCreation());
+
+                                getActivity().onBackPressed();
+                            }
+                        })
+                .setNegativeButton(
+                        R.string.note_dialog_negative_button,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().onBackPressed();
+                            }
+                        })
+                .setNeutralButton(
+                        R.string.note_dialog_cancel_button,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
     }
 
     private void initializeDateOfCreationView() {
@@ -157,8 +140,8 @@ public class NoteFragment extends Fragment {
     }
 
     private boolean isModified() {
-        return !nameView.getText().equals(currentNote.getName())
-                || !descriptionView.getText().equals(currentNote.getDescription())
+        return !nameView.getText().toString().equals(currentNote.getName())
+                || !descriptionView.getText().toString().equals(currentNote.getDescription())
                 || isDateOfCreationModified();
     }
 
