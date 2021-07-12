@@ -1,16 +1,9 @@
 package ru.geekbrains.notes.model;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +12,9 @@ import java.util.Map;
 public class NotesRepository implements INotesSource {
     private static final String NOTES = "Notes";
 
-    private FirebaseFirestore store = FirebaseFirestore.getInstance();
-    private CollectionReference collection = store.collection(NOTES);
-
-    private List<Note> notes;
+    private final FirebaseFirestore store = FirebaseFirestore.getInstance();
+    private final CollectionReference collection = store.collection(NOTES);
+    private final List<Note> notes;
 
     public NotesRepository() {
         notes = new ArrayList<>();
@@ -32,20 +24,17 @@ public class NotesRepository implements INotesSource {
     public NotesRepository initialize(INotesResponse response) {
         collection.orderBy(NoteMapping.Fields.DATE_OF_CREATION, Query.Direction.DESCENDING)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            notes.clear();
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        notes.clear();
 
-                            for (QueryDocumentSnapshot result : task.getResult()) {
-                                Map<String, Object> document = result.getData();
-                                Note note = NoteMapping.noteByDocument(result.getId(), document);
-                                notes.add(note);
-                            }
-
-                            response.initialized(NotesRepository.this);
+                        for (QueryDocumentSnapshot result : task.getResult()) {
+                            Map<String, Object> document = result.getData();
+                            Note note = NoteMapping.noteByDocument(result.getId(), document);
+                            notes.add(note);
                         }
+
+                        response.initialized(NotesRepository.this);
                     }
                 });
 
@@ -69,13 +58,7 @@ public class NotesRepository implements INotesSource {
 
     @Override
     public void add(Note note) {
-        collection.add(note).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference document) {
-                note.setId(document.getId());
-            }
-        });
-
+        collection.add(note).addOnSuccessListener(document -> note.setId(document.getId()));
         notes.add(note);
     }
 

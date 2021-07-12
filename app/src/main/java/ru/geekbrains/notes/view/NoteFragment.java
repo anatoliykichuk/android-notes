@@ -1,7 +1,5 @@
 package ru.geekbrains.notes.view;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -76,18 +74,14 @@ public class NoteFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
+        if (item.getItemId() == R.id.menu_save) {
+            if (isModified()) {
+                askQuestion();
 
-        switch (itemId) {
-            case R.id.menu_save:
-
-                if (isModified()) {
-                    askQuestion();
-
-                } else {
-                    getActivity().onBackPressed();
-                }
-                return true;
+            } else {
+                getActivity().onBackPressed();
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -96,34 +90,23 @@ public class NoteFragment extends Fragment {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
                 .setTitle(R.string.note_save_dialog_title)
                 .setCancelable(false)
-                .setPositiveButton(
-                        R.string.note_dialog_positive_button,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                currentNote.update(
-                                        nameView.getText().toString(),
-                                        descriptionView.getText().toString(),
-                                        dateOfCreation());
+                .setPositiveButton(R.string.note_dialog_positive_button, (dialog, which) -> {
+                            currentNote.update(
+                                    nameView.getText().toString(),
+                                    descriptionView.getText().toString(),
+                                    dateOfCreation());
 
-                                getActivity().onBackPressed();
-                            }
+                            getActivity().onBackPressed();
                         })
+
                 .setNegativeButton(
                         R.string.note_dialog_negative_button,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                getActivity().onBackPressed();
-                            }
-                        })
+                        (dialog, which) -> getActivity().onBackPressed())
+
                 .setNeutralButton(
                         R.string.note_dialog_cancel_button,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                        (dialog, which) -> {
 
-                            }
                         });
 
         AlertDialog alertDialog = dialogBuilder.create();

@@ -1,8 +1,6 @@
 package ru.geekbrains.notes.view;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -141,18 +139,15 @@ public class NotesFragment extends Fragment {
         notesItems.setLayoutManager(manager);
         notesItems.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Activity context  = requireActivity();
-                PopupMenu popupMenu = new PopupMenu(context, view);
-                context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
+        adapter.setOnItemClickListener((view, position) -> {
+            Activity context  = requireActivity();
+            PopupMenu popupMenu = new PopupMenu(context, view);
+            context.getMenuInflater().inflate(R.menu.notes_popup_menu, popupMenu.getMenu());
 
-                notesPosition = position;
+            notesPosition = position;
 
-                popupMenu.setOnMenuItemClickListener(onPopupMenuItemClickListener);
-                popupMenu.show();
-            }
+            popupMenu.setOnMenuItemClickListener(onPopupMenuItemClickListener);
+            popupMenu.show();
         });
     }
 
@@ -177,23 +172,14 @@ public class NotesFragment extends Fragment {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext())
                 .setTitle(R.string.note_remove_dialog_title)
                 .setCancelable(false)
-                .setPositiveButton(
-                        R.string.note_dialog_positive_button,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                notes.remove(notesPosition);
-                                adapter.notifyDataSetChanged();
+                .setPositiveButton(R.string.note_dialog_positive_button, (dialog, which) -> {
+                            notes.remove(notesPosition);
+                            adapter.notifyDataSetChanged();
 
-                            }
                         })
-                .setNegativeButton(
-                        R.string.note_dialog_negative_button,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-                            }
+                .setNegativeButton(R.string.note_dialog_negative_button, (dialog, which) -> {
+
                         });
 
         AlertDialog alertDialog = dialogBuilder.create();
