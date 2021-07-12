@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/notes_item"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="@dimen/notes_item_text_size">
-</TextView>
+    app:cardCornerRadius="15dp"
+    app:cardElevation="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/note_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_weight="1"
+            android:textSize="@dimen/notes_item_text_size">
+        </TextView>
+
+        <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/note_date_of_creation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="@dimen/notes_item_date_size">
+        </TextView>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -3,13 +3,19 @@ package ru.geekbrains.notes.view;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.geekbrains.notes.R;
+import ru.geekbrains.notes.model.Note;
 import ru.geekbrains.notes.model.NotesRepository;
+
+import androidx.annotation.NonNull;
+
+import java.text.SimpleDateFormat;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     private NotesRepository notes;
@@ -34,7 +40,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-        holder.getNotesItem().setText(notes.getNote(position).getName());
+        Note note = notes.getNote(position);
+
+        CardView notesItem = holder.getNotesItem();
+
+        TextView noteNameView = notesItem.findViewById(R.id.note_name);
+        noteNameView.setText(note.getName());
+
+        TextView noteDateOfCreationView = notesItem.findViewById(R.id.note_date_of_creation);
+        noteDateOfCreationView.setText(new SimpleDateFormat("dd.MM.yyyy").format(note.getDateOfCreation()));
     }
 
     @Override
